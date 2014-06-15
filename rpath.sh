@@ -107,9 +107,9 @@ rpath_ls() {
     current=$(_get | head -n 1)
 
     for dir in "${dirs[@]}"; do
-        str="[$((++counter))] ${dir##*/}"
+        str="  [$((++counter))] ${dir##*/}"
 
-        [[ "${dir##*/}" == "${current}" ]] && str+=" *"
+        [[ "${dir##*/}" == "${current}" ]] && str="${str/ /*}"
 
         _echo "${str}"
     done
