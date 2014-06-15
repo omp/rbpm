@@ -29,8 +29,12 @@ _export_path() {
     echo "hash -r"
 }
 
+_warn() {
+    echo "echo '${@//\'/\'\\\'\'}' 1>&2"
+}
+
 _die() {
-    [[ -n "${@}" ]] && echo "echo '${@//\'/\'\\\'\'}' 1>&2"
+    [[ -n "${@}" ]] && _warn "${@}"
 
     echo "false"
     exit 1
@@ -118,7 +122,12 @@ rpath_ls() {
 }
 
 rpath_get() {
-    current="$(_get)" && _echo "${current}"
+    current="$(_get)" || _die 'No rubies found in PATH.'
+
+    [[ $(wc -l <<< "${current}") -gt 1 ]] \
+        && _warn 'Warning: multiple rubies found in PATH.'
+
+    _echo "${current}"
 }
 
 rpath_set() {
@@ -148,11 +157,11 @@ rpath_clear() {
 rpath_help() {
     _echo 'Usage: rpath <command> [args]'
     _echo
-    _echo 'Available options:'
+    _echo 'Commands:'
     _echo '  ls     List all available rubies.'
     _echo '  get    Display currently selected ruby.'
     _echo '  set    Select specified ruby.'
-    _echo '  clear  Clear path of any rpath rubies.'
+    _echo '  clear  Clear path of any rubies.'
     _echo '  help   Display this help information.'
 }
 
