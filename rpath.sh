@@ -24,7 +24,7 @@ _echo() {
     echo "echo '${@//\'/\'\\\'\'}'"
 }
 
-_export_path() {
+_export() {
     echo "export PATH='${PATH//\'/\'\\\'\'}'"
     echo "hash -r"
 }
@@ -52,16 +52,6 @@ _populate_dirs() {
     [[ -n "${dirs}" ]] || _die "directory ${RUBIES_PATH} is empty."
 }
 
-_match() {
-    if [[ "${1}" =~ ^[0-9]+$ ]]; then
-        [[ "${2}" == "${1}" ]] && return
-    else
-        [[ "${3}" == *"${1}"* ]] && return
-    fi
-
-    return 1
-}
-
 _populate_selected() {
     local dir dirs
     unset selected
@@ -81,13 +71,6 @@ _populate_selected() {
         || _warn 'warning: multiple rubies found in PATH.'
 }
 
-_set() {
-    _clear
-    _echo "Adding ${1}/bin to PATH."
-
-    PATH="${1}/bin:${PATH}"
-}
-
 _clear() {
     local dir dirs cdirs
 
@@ -104,6 +87,22 @@ _clear() {
     [[ "${#cdirs[@]}" -ne "${#dirs[@]}" ]] || return 1
 
     PATH="$(IFS=':'; echo "${cdirs[*]}")"
+}
+
+_add() {
+    _echo "Adding ${1}/bin to PATH."
+
+    PATH="${1}/bin:${PATH}"
+}
+
+_match() {
+    if [[ "${1}" =~ ^[0-9]+$ ]]; then
+        [[ "${2}" == "${1}" ]] && return
+    else
+        [[ "${3}" == *"${1}"* ]] && return
+    fi
+
+    return 1
 }
 
 rpath_ls() {
@@ -138,8 +137,9 @@ rpath_set() {
 
     for dir in "${dirs[@]}"; do
         if _match "${1}" "$((++counter))" "${dir##*/}"; then
-            _set "${dir}"
-            _export_path
+            _clear
+            _add "${dir}"
+            _export
 
             return
         fi
@@ -150,7 +150,7 @@ rpath_set() {
 
 rpath_clear() {
     _clear || _die 'no rubies found in PATH.'
-    _export_path
+    _export
 }
 
 rpath_help() {
