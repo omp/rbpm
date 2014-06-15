@@ -62,21 +62,23 @@ _match() {
     return 1
 }
 
-_get() {
-    local dir dirs succeed=false
+_populate_selected() {
+    local dir dirs
+    unset selected
 
     IFS=':' read -a dirs <<< "${PATH}"
 
     for dir in "${dirs[@]}"; do
         if [[ "${dir}" == "${RUBIES_PATH}/"* ]]; then
             dir="${dir%/bin}"
-            echo "${dir##*/}"
-
-            succeed=true
+            selected+=("${dir##*/}")
         fi
     done
 
-    $succeed || return 1
+    [[ -n ${selected} ]] || return 1
+
+    [[ "${#selected[@]}" -eq 1 ]] \
+        || _warn 'warning: multiple rubies found in PATH.'
 }
 
 _set() {
@@ -108,26 +110,25 @@ _clear() {
 
 rpath_ls() {
     _populate_dirs
+    _populate_selected
 
     counter=0
-    current=$(_get | head -n 1)
 
     for dir in "${dirs[@]}"; do
         str="  [$((++counter))] ${dir##*/}"
 
-        [[ "${dir##*/}" == "${current}" ]] && str="${str/ /*}"
+        [[ "${dir##*/}" == "${selected}" ]] && str="${str/ /*}"
 
         _echo "${str}"
     done
 }
 
 rpath_get() {
-    current="$(_get)" || _die 'no rubies found in PATH.'
+    _populate_selected || _die 'no rubies found in PATH.'
 
-    [[ $(wc -l <<< "${current}") -gt 1 ]] \
-        && _warn 'warning: multiple rubies found in PATH.'
-
-    _echo "${current}"
+    for dir in "${selected[@]}"; do
+        _echo "${dir}"
+    done
 }
 
 rpath_set() {
