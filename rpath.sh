@@ -81,7 +81,7 @@ _set() {
 }
 
 _clear() {
-    local dir dirs cdirs=() succeed=false
+    local dir dirs cdirs succeed=false
 
     IFS=':' read -a dirs <<< "${PATH}"
 
