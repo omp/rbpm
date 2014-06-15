@@ -30,7 +30,7 @@ _export_path() {
 }
 
 _warn() {
-    echo "echo '${@//\'/\'\\\'\'}' 1>&2"
+    echo "echo 'rpath: ${@//\'/\'\\\'\'}' 1>&2"
 }
 
 _die() {
@@ -42,14 +42,14 @@ _die() {
 
 _populate_dirs() {
     [[ -d "${RUBIES_PATH}" ]] \
-        || _die "Directory ${RUBIES_PATH} does not exist."
+        || _die "directory ${RUBIES_PATH} does not exist."
 
     # Cannot handle paths containing a newline. Only an idiot would
     # encounter this in practice.
     readarray -t dirs < <(shopt -s nullglob; \
         printf '%s\0' "${RUBIES_PATH}"/* | sort -zV | xargs -0n1)
 
-    [[ -n "${dirs}" ]] || _die "Directory ${RUBIES_PATH} is empty."
+    [[ -n "${dirs}" ]] || _die "directory ${RUBIES_PATH} is empty."
 }
 
 _match() {
@@ -122,16 +122,16 @@ rpath_ls() {
 }
 
 rpath_get() {
-    current="$(_get)" || _die 'No rubies found in PATH.'
+    current="$(_get)" || _die 'no rubies found in PATH.'
 
     [[ $(wc -l <<< "${current}") -gt 1 ]] \
-        && _warn 'Warning: multiple rubies found in PATH.'
+        && _warn 'warning: multiple rubies found in PATH.'
 
     _echo "${current}"
 }
 
 rpath_set() {
-    [[ -n "${1}" ]] || _die 'rpath set requires an argument.'
+    [[ -n "${1}" ]] || _die 'set command requires an argument.'
 
     _populate_dirs
 
@@ -146,11 +146,11 @@ rpath_set() {
         fi
     done
 
-    _die 'No matching ruby found.'
+    _die 'no matching ruby found.'
 }
 
 rpath_clear() {
-    _clear || _die 'No rubies found in PATH.'
+    _clear || _die 'no rubies found in PATH.'
     _export_path
 }
 
