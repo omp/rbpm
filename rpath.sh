@@ -75,7 +75,7 @@ _populate_selected() {
         fi
     done
 
-    [[ -n ${selected} ]] || return 1
+    [[ -n "${selected}" ]] || return 1
 
     [[ "${#selected[@]}" -eq 1 ]] \
         || _warn 'warning: multiple rubies found in PATH.'
@@ -89,21 +89,19 @@ _set() {
 }
 
 _clear() {
-    local dir dirs cdirs succeed=false
+    local dir dirs cdirs
 
     IFS=':' read -a dirs <<< "${PATH}"
 
     for dir in "${dirs[@]}"; do
         if [[ "${dir}" == "${RUBIES_PATH}/"* ]]; then
             _echo "Removing ${dir} from PATH."
-
-            succeed=true
         else
             cdirs+=("${dir}")
         fi
     done
 
-    $succeed || return 1
+    [[ "${#cdirs[@]}" -ne "${#dirs[@]}" ]] || return 1
 
     PATH="$(IFS=':'; echo "${cdirs[*]}")"
 }
