@@ -42,8 +42,10 @@ _populate_dirs() {
 
     # Cannot handle paths containing a newline. Only an idiot would
     # encounter this in practice.
-    readarray -t dirs < \
-        <(printf '%s\0' "${RUBIES_PATH}"/* | sort -zV | xargs -0n1)
+    readarray -t dirs < <(shopt -s nullglob; \
+        printf '%s\0' "${RUBIES_PATH}"/* | sort -zV | xargs -0n1)
+
+    [[ -n "${dirs}" ]] || _die "Directory ${RUBIES_PATH} is empty."
 }
 
 _match() {
@@ -120,7 +122,7 @@ rpath_get() {
 }
 
 rpath_set() {
-    [[ -z "${1}" ]] && _die 'rpath set requires an argument.'
+    [[ -n "${1}" ]] || _die 'rpath set requires an argument.'
 
     _populate_dirs
 
