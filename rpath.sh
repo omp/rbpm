@@ -120,15 +120,15 @@ rpath_set() {
 
     for dir in "${dirs[@]}"; do
         if [[ "${dir##*/}" == *"${1}"* ]]; then
-            _clear
-            _add "${dir}"
-            _export
-
-            return
+            match="${dir}"
         fi
     done
 
-    _die 'no matching ruby found.'
+    [[ -n "${match}" ]] || _die 'no matching ruby found.'
+
+    _clear
+    _add "${match}"
+    _export
 }
 
 rpath_clear() {
