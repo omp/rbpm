@@ -52,7 +52,6 @@ _populate_dirs() {
 
 _populate_selected() {
     local dir dirs
-    unset selected
 
     IFS=':' read -a dirs <<< "${PATH}"
 
@@ -93,6 +92,8 @@ _add() {
 }
 
 rpath_ls() {
+    local dir dirs selected str
+
     _populate_dirs
     _populate_selected
 
@@ -106,6 +107,8 @@ rpath_ls() {
 }
 
 rpath_get() {
+    local dir selected
+
     _populate_selected || _die 'no rubies found in PATH.'
 
     for dir in "${selected[@]}"; do
@@ -115,6 +118,8 @@ rpath_get() {
 
 rpath_set() {
     [[ -n "${1}" ]] || _die 'set command requires an argument.'
+
+    local dir dirs match
 
     _populate_dirs
 
