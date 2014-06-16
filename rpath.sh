@@ -13,10 +13,8 @@
 #
 #     rpath() { source <(/path/to/rpath.sh "${@}"); }
 #
-# Two methods of version matching are supported. If the specified
-# argument consists of only numbers, it is matched against the list
-# number shown in `rpath ls`. Otherwise, a substring match is performed
-# against the directory name.
+# Placing the above function inside ~/.bashrc (or equivalent) will load
+# it upon starting your shell.
 
 : ${RUBIES_PATH:="${HOME}/.rubies"}
 
@@ -94,24 +92,12 @@ _add() {
     PATH="${1}/bin:${PATH}"
 }
 
-_match() {
-    if [[ "${1}" =~ ^[0-9]+$ ]]; then
-        [[ "${2}" == "${1}" ]] && return
-    else
-        [[ "${3}" == *"${1}"* ]] && return
-    fi
-
-    return 1
-}
-
 rpath_ls() {
     _populate_dirs
     _populate_selected
 
-    counter=0
-
     for dir in "${dirs[@]}"; do
-        str="  [$((++counter))] ${dir##*/}"
+        str="  ${dir##*/}"
 
         [[ "${dir##*/}" == "${selected}" ]] && str="${str/ /*}"
 
@@ -132,10 +118,8 @@ rpath_set() {
 
     _populate_dirs
 
-    counter=0
-
     for dir in "${dirs[@]}"; do
-        if _match "${1}" "$((++counter))" "${dir##*/}"; then
+        if [[ "${dir##*/}" == *"${1}"* ]]; then
             _clear
             _add "${dir}"
             _export
