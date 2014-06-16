@@ -26,7 +26,7 @@ _echo() {
 
 _export() {
     echo "export PATH='${PATH//\'/\'\\\'\'}'"
-    echo "hash -r"
+    echo 'hash -r'
 }
 
 _warn() {
@@ -36,7 +36,7 @@ _warn() {
 _die() {
     [[ -n "${@}" ]] && _warn "${@}"
 
-    echo "false"
+    echo 'false'
     exit 1
 }
 
@@ -65,8 +65,7 @@ _populate_selected() {
         fi
     done
 
-    [[ -n "${selected}" ]] || return 1
-
+    [[ "${#selected[@]}" -ne 0 ]] || return 1
     [[ "${#selected[@]}" -eq 1 ]] \
         || _warn 'warning: multiple rubies found in PATH.'
 }
