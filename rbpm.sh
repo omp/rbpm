@@ -3,15 +3,15 @@
 # Copyright 2014 David Vazgenovich Shakaryan
 # Distributed under the terms of the MIT License.
 #
-# rpath
-# https://github.com/omp/rpath
+# rbpm (ruby path mangler)
+# https://github.com/omp/rbpm
 # Manage multiple Ruby installations with no black magic.
 #
 # In order to prevent environment pollution, the output of this script
 # is a list of commands which must be sourced. This can be achieved
 # through a simple shell function:
 #
-#     rpath() { source <(/path/to/rpath.sh "${@}"); }
+#     rbpm() { source <(/path/to/rbpm.sh "${@}"); }
 #
 # Placing the above function inside ~/.bashrc (or equivalent) will load
 # it upon starting your shell.
@@ -28,7 +28,7 @@ _export() {
 }
 
 _warn() {
-    echo "echo 'rpath: ${@//\'/\'\\\'\'}' 1>&2"
+    echo "echo 'rbpm: ${@//\'/\'\\\'\'}' 1>&2"
 }
 
 _die() {
@@ -91,7 +91,7 @@ _add() {
     PATH="${1}/bin:${PATH}"
 }
 
-rpath_ls() {
+rbpm_ls() {
     local dir dirs selected str
 
     _populate_dirs
@@ -106,7 +106,7 @@ rpath_ls() {
     done
 }
 
-rpath_get() {
+rbpm_get() {
     local dir selected
 
     _populate_selected || _die 'no rubies found in PATH.'
@@ -116,7 +116,7 @@ rpath_get() {
     done
 }
 
-rpath_set() {
+rbpm_set() {
     [[ -n "${1}" ]] || _die 'set command requires an argument.'
 
     local dir dirs match
@@ -136,13 +136,13 @@ rpath_set() {
     _export
 }
 
-rpath_clear() {
+rbpm_clear() {
     _clear || _die 'no rubies found in PATH.'
     _export
 }
 
-rpath_help() {
-    _echo 'Usage: rpath <command> [args]'
+rbpm_help() {
+    _echo 'Usage: rbpm <command> [args]'
     _echo
     _echo 'Commands:'
     _echo '  ls     List all available rubies.'
@@ -154,13 +154,13 @@ rpath_help() {
 
 case "${1}" in
     'ls')
-        rpath_ls ;;
+        rbpm_ls ;;
     'get')
-        rpath_get ;;
+        rbpm_get ;;
     'set')
-        rpath_set "${2}" ;;
+        rbpm_set "${2}" ;;
     'clear')
-        rpath_clear ;;
+        rbpm_clear ;;
     *)
-        rpath_help ;;
+        rbpm_help ;;
 esac
