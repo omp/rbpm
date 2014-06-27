@@ -1,0 +1,80 @@
+rbpm (ruby path mangler)
+
+https://github.com/omp/rbpm
+Manage multiple Ruby installations with no black magic.
+
+
+INFO
+
+  rbpm only manages rubies located in the ~/.rubies directory. This
+  behaviour can be changed by setting the RUBIES_PATH environment
+  variable to some other path.
+
+  rbpm does not display information about rubies it does not manage,
+  such as any system-wide install.
+
+
+INSTALLING
+
+  Save the script in a safe location, then add the following to your
+  ~/.bashrc or equivalent file:
+
+      rbpm() { source <(/path/to/rbpm.sh "${@}"); }
+
+
+INSTALLING RUBIES
+
+  The path to the executable should look something like this:
+
+      ~/.rubies/ruby-2.1.2/bin/ruby
+
+  To install Ruby to this directory:
+
+      $ wget http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.bz2
+      $ tar -xf ruby-2.1.2.tar.bz2
+      $ cd ruby-2.1.2
+      $ ./configure --prefix="${HOME}"/.rubies/ruby-2.1.2
+      $ make
+      $ make install
+
+
+USAGE
+
+  A sequence of commands showing rbpm in use:
+
+      $ rbpm ls
+        ruby-1.8.7-p374
+        ruby-1.9.3-p547
+        ruby-2.1.2
+
+      $ rbpm set 2.1
+      Adding /home/omp/.rubies/ruby-2.1.2/bin to PATH.
+
+      $ rbpm ls
+        ruby-1.8.7-p374
+        ruby-1.9.3-p547
+      * ruby-2.1.2
+
+      $ ruby -v
+      ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-linux]
+
+      $ rbpm set 1.9
+      Removing /home/omp/.rubies/ruby-2.1.2/bin from PATH.
+      Adding /home/omp/.rubies/ruby-1.9.3-p547/bin to PATH.
+
+      $ ruby -v
+      ruby 1.9.3p547 (2014-05-14 revision 45962) [x86_64-linux]
+
+      $ rbpm clear
+      Removing /home/omp/.rubies/ruby-1.9.3-p547/bin from PATH.
+
+  To load from a .ruby-version file:
+
+      $ rbpm set $(cat .ruby-version)
+      Adding /home/omp/.rubies/ruby-1.8.7-p374/bin to PATH.
+
+
+LICENSE
+
+  Distributed under the terms of the MIT License.
+  See included COPYING file for the full license text.
