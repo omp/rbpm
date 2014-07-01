@@ -16,6 +16,8 @@
 # Placing the above function inside ~/.bashrc (or equivalent) will load
 # it upon starting your shell.
 
+RBPM_VERSION='0.1'
+
 : ${RUBIES_PATH:="${HOME}/.rubies"}
 
 _echo() {
@@ -141,15 +143,19 @@ rbpm_clear() {
     _export
 }
 
+rbpm_version() {
+    _echo "rbpm ${RBPM_VERSION}"
+}
+
 rbpm_help() {
     _echo 'Usage: rbpm <command> [args]'
     _echo
     _echo 'Commands:'
-    _echo '  ls     List all available rubies.'
-    _echo '  get    Display currently selected ruby.'
-    _echo '  set    Select specified ruby.'
-    _echo '  clear  Clear path of any rubies.'
-    _echo '  help   Display this help information.'
+    _echo '  ls       List all available rubies.'
+    _echo '  get      Display currently selected ruby.'
+    _echo '  set      Select specified ruby.'
+    _echo '  clear    Unselect any selected rubies.'
+    _echo '  version  Display rbpm version.'
 }
 
 case "${1}" in
@@ -161,6 +167,10 @@ case "${1}" in
         rbpm_set "${2}" ;;
     'clear')
         rbpm_clear ;;
+    'version')
+        rbpm_version ;;
     *)
         rbpm_help ;;
 esac
+
+# vim: set sw=4 sts=4 ts=4 et :
