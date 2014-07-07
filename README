@@ -6,13 +6,13 @@ Manage multiple Ruby installations with no black magic.
 
 NOTES
 
-  rbpm only manages rubies located in the ~/.rubies directory. This behaviour
-  can be changed by setting the RUBIES_PATH environment variable to some other
-  location. rbpm does not display information about rubies it does not manage,
-  such as any system-wide install.
+  rbpm only manages rubies located in the ~/.rubies directory. This
+  behaviour can be changed by setting the RUBIES_PATH environment
+  variable to some other location. rbpm does not display information
+  about rubies it does not manage, such as any system-wide install.
 
-  rbpm performs a substring match when selecting a ruby, using the highest
-  matching directory when there are multiple matches.
+  rbpm performs a substring match when selecting a ruby, using the
+  highest matching directory when there are multiple matches.
 
 
 DEPENDENCIES
@@ -24,8 +24,8 @@ DEPENDENCIES
 
 INSTALLING
 
-  Save the script to a safe location, then add the following function to your
-  ~/.bashrc or equivalent file:
+  Save the script to a safe location, then add the following function to
+  your ~/.bashrc or equivalent file:
 
       rbpm() { source <(/path/to/rbpm.sh "${@}"); }
 
@@ -93,4 +93,4 @@ LICENSE
   See included COPYING file for the full license text.
 
 
-# vim: set sw=4 sts=4 ts=4 et tw=79 spell spl=en :
+# vim: set sw=2 sts=2 ts=2 et tw=72 spell spl=en :
